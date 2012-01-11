@@ -42,9 +42,10 @@ class GenericFlatblockNode(Node):
         module_name = related_object._meta.module_name
         
         # Check if user has change permissions
+        admin_prefix = getattr(settings, 'ADMIN_URL_PREFIX', 'admin')
         if context['request'].user.is_authenticated() and \
            context['request'].user.has_perm('%s.change_%s' % (app_label, module_name)):
-            return reverse('admin:%s_%s_change' % (app_label, module_name), args=[related_object.pk])
+            return reverse('%s:%s_%s_change' % (admin_prefix, app_label, module_name), args=[related_object.pk])
         else:
             return None
 
